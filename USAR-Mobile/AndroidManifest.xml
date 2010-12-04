@@ -14,6 +14,5 @@
         <activity android:name=".CollectActivity"></activity>
     	  <activity android:name=".LocationsActivity"></activity>
     	  <activity android:name=".SettingsActivity"></activity>
-    <activity android:name=".SettingsActivity"></activity>
 </application>
 </manifest> 
