@@ -8,10 +8,25 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
 
-class Greeting(db.Model):
-    author = db.UserProperty()
-    content = db.StringProperty(multiline=True)
-    date = db.DateTimeProperty(auto_now_add=True)
+   
+
+class House(db.Model):
+    author = db.UserProperty(required = True)
+    date_entered = db.DateTimeProperty(auto_now_add=True, required=True)
+
+    # field data (X data)
+    num_people = db.IntegerProperty(multiline=False) # default Null
+    condition = db.StringProperty(multiline=False) # default Null
+    date_found = db.DateTimeProperty() # default Null
+    agency = db.StringProperty(multiline=False) # default Null
+    
+
+
+# in case we need multiple images per house, and each has some sort of metadata
+class HouseImage(db.Model):
+    image = db.ReferenceProperty(House, collection_name='images')
+
+
 
 class MainPage(webapp.RequestHandler):
     def get(self):
