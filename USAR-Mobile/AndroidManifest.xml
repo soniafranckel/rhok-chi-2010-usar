@@ -13,5 +13,6 @@
         </activity>
     <activity android:name=".CollectTab"></activity>
     <activity android:name=".LocationsTab"></activity>
+    <activity android:name=".SettingsActivity"></activity>
 </application>
 </manifest> 
