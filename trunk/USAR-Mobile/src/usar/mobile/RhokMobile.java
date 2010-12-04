@@ -35,9 +35,8 @@ public class RhokMobile extends TabActivity {
                       .setContent(intent);
         tabHost.addTab(spec);
 
-        intent = new Intent().setClass(this, CollectTab.class);
-        spec = tabHost.newTabSpec("songs").setIndicator("Songs",
-                          res.getDrawable(R.drawable.ic_tab_artists))
+        intent = new Intent().setClass(this, SettingsActivity.class);
+        spec = tabHost.newTabSpec("settings").setIndicator("Settings")
                       .setContent(intent);
         tabHost.addTab(spec);
 
