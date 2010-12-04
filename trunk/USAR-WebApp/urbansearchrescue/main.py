@@ -11,10 +11,11 @@ from google.appengine.ext import db
    
 
 class House(db.Model):
-    author = db.UserProperty(required = True)
-    date_entered = db.DateTimeProperty(auto_now_add=True, required=True)
+    # The person entering the data
+    updated_by = db.UserProperty()
+    date_updated = db.DateTimeProperty(auto_now_add=True)
 
-    # field data (X data)
+    # The person on the field. field data (data around the X mark on the wall)
     num_people = db.IntegerProperty() # default Null
     condition = db.StringProperty(multiline=False) # default Null
     date_found = db.DateTimeProperty() # default Null
@@ -31,7 +32,7 @@ class HouseImage(db.Model):
 
 class UploadForm(webapp.RequestHandler):
     def get(self):
-        self.response.out.write("""
+        self.response.out.write("""<html><body>
                   <form action="/upload" enctype="multipart/form-data" method="post">
                     <div><input type="file" name="img"/></div>
                     <div><input type="submit" value="Send Pic"></div>
@@ -62,8 +63,24 @@ class MainPage(webapp.RequestHandler):
 #        self.response.out.write(template.render(path, template_values))
 
 
+class NewHouse (webapp.RequestHandler):
+    form = """%i houses <html><body>
+                  <form action="/newhouse" enctype="multipart/form-data" method="post">
+                    <div><input type="submit" value="New House"></div>
+                  </form>
+                </body>
+              </html>""" % House.all().count()
 
-class Image (webapp.RequestHandler):
+    def post(self): # just make a new house
+        House().put()
+        self.response.out.write(self.form)
+
+    def get(self):
+        self.response.out.write(self.form)
+
+
+
+class ImageServe (webapp.RequestHandler):
     def get(self):
         houseimage = db.get(self.request.get("img_id"))
      
@@ -78,7 +95,8 @@ application = webapp.WSGIApplication(
                                      [('/', MainPage),
                                       ('/uploadform', UploadForm),
                                       ('/upload', Upload),
-                                      ('/img', Image)],
+                                      ('/img', ImageServe),
+                                      ('/newhouse', NewHouse)],
                                      debug=True)
 
 def main():
