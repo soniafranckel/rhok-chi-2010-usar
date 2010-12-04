@@ -20,14 +20,14 @@ public class RhokMobile extends TabActivity {
         Intent intent;  // Reusable Intent for each tab
 
         // Create an Intent to launch an Activity for the tab (to be reused)
-        intent = new Intent().setClass(this, CollectTab.class);
+        intent = new Intent().setClass(this, CollectActivity.class);
 
         // Initialize a TabSpec for each tab and add it to the TabHost
         spec = tabHost.newTabSpec("Collect").setIndicator("Collect").setContent(intent);
         tabHost.addTab(spec);
 
         // Do the same for the other tabs
-        intent = new Intent().setClass(this, LocationsTab.class);
+        intent = new Intent().setClass(this, LocationsActivity.class);
         spec = tabHost.newTabSpec("locations").setIndicator("Locations").setContent(intent);
         tabHost.addTab(spec);
 

@@ -2,13 +2,12 @@ package usar.mobile;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.widget.TextView;
 
-public class CollectTab extends Activity {
+public class LocationsActivity extends Activity {
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.collecttab);
+        setContentView(R.layout.locationstab);
     }
 }
