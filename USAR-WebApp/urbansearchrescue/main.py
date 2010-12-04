@@ -15,7 +15,7 @@ class House(db.Model):
     date_entered = db.DateTimeProperty(auto_now_add=True, required=True)
 
     # field data (X data)
-    num_people = db.IntegerProperty(multiline=False) # default Null
+    num_people = db.IntegerProperty() # default Null
     condition = db.StringProperty(multiline=False) # default Null
     date_found = db.DateTimeProperty() # default Null
     agency = db.StringProperty(multiline=False) # default Null
@@ -24,45 +24,61 @@ class House(db.Model):
 
 # in case we need multiple images per house, and each has some sort of metadata
 class HouseImage(db.Model):
-    image = db.ReferenceProperty(House, collection_name='images')
+    house = db.ReferenceProperty(House, collection_name='images', required=False) # should be required eventually
+    image = db.BlobProperty()
 
+
+
+class UploadForm(webapp.RequestHandler):
+    def get(self):
+        self.response.out.write("""
+                  <form action="/upload" enctype="multipart/form-data" method="post">
+                    <div><input type="file" name="img"/></div>
+                    <div><input type="submit" value="Send Pic"></div>
+                  </form>
+                </body>
+              </html>""") 
+
+class Upload(webapp.RequestHandler):
+    def post(self):
+        user = users.get_current_user()
+        if not user:
+            self.redirect(users.create_login_url(self.request.uri))
+
+        houseimage = HouseImage()
+        image = self.request.get("img")
+        houseimage.image = db.Blob(image)
+        houseimage.put()
+        self.redirect('/uploadform')
 
 
 class MainPage(webapp.RequestHandler):
     def get(self):
-        greetings_query = Greeting.all().order('-date')
-        greetings = greetings_query.fetch(10)
+        for img in HouseImage.all():
+            self.response.out.write("<div><img src='img?img_id=%s'></img>" %
+                                          img.key())
+#        could use this later
+#        path = os.path.join(os.path.dirname(__file__), 'show_imgs.html')
+#        self.response.out.write(template.render(path, template_values))
 
-        if users.get_current_user():
-            url = users.create_logout_url(self.request.uri)
-            url_linktext = 'Logout'
+
+
+class Image (webapp.RequestHandler):
+    def get(self):
+        houseimage = db.get(self.request.get("img_id"))
+     
+        if houseimage.image:
+            self.response.headers['Content-Type'] = "image/jpg"
+            self.response.out.write(houseimage.image)
         else:
-            url = users.create_login_url(self.request.uri)
-            url_linktext = 'Login'
+            self.error(404)
 
-        template_values = {
-            'greetings': greetings,
-            'url': url,
-            'url_linktext': url_linktext,
-            }
-
-        path = os.path.join(os.path.dirname(__file__), 'index.html')
-        self.response.out.write(template.render(path, template_values))
-
-class Guestbook(webapp.RequestHandler):
-    def post(self):
-        greeting = Greeting()
-
-        if users.get_current_user():
-            greeting.author = users.get_current_user()
-
-        greeting.content = self.request.get('content')
-        greeting.put()
-        self.redirect('/')
 
 application = webapp.WSGIApplication(
                                      [('/', MainPage),
-                                      ('/sign', Guestbook)],
+                                      ('/uploadform', UploadForm),
+                                      ('/upload', Upload),
+                                      ('/img', Image)],
                                      debug=True)
 
 def main():
