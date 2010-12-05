@@ -5,16 +5,55 @@
 </head>
 
 <body>
-    <div><b>ID:</b> {{house.key}}</div>
-    <div><b>Date House Entered Into DB:</b> {{house.date_created}}</div>
-    <br/>
-    <div><b>Updated By:</b> {{house.updated_by.nickname}}</div>
-    <div><b>Date Updated:</b> {{house.date_updated}}</div>
-    <br/>
-    <div><b>Num People:</b> {{house.num_people}}</div>
-    <div><b>Condition:</b> {{house.condition}}</div>
-    <div><b>Date Found:</b> {{house.date_found}}</div>
-    <div><b>Agency:</b> {{house.agency}}</div>
+    <form action="/updatehouse" enctype="multipart/form-data" method="post">
+        <input style="display:none" type="text" name="house_id" value="{{house.key}}">
+        <div><b>ID:</b> {{house.key}}</div>
+        <div><b>Date House Entered Into DB:</b> {{house.date_created}}</div>
+
+        <br/>
+        <div><b>Updated By:</b> {{house.updated_by.nickname}}</div>
+        <div><b>Date Last Updated:</b> {{house.date_updated}}</div>
+
+        <br/>
+        <div>
+            <b>Num People:</b>
+
+            {% if house.num_people %}
+                <input name="num_people" type="text" value="{{ house.num_people}}"/>
+            {% else %}
+                <input name="num_people" type="text"/>Info still missing
+            {% endif %}
+        </div>
+
+        <div>
+            <b>Condition:</b>
+            {% if house.condition %}
+                <input name="condition" type="text" value="{{ house.condition}}"/>
+            {% else %}
+                <input name="condition" type="text"/>Info still missing
+            {% endif %}
+        </div>
+
+        <div>
+            <b>Date Found:</b>
+            {% if house.date_found %}
+                <input name="date_found" type="text" value="{{ house.date_found}}"/>
+            {% else %}
+                <input name="date_found" type="text"/>Info still missing
+            {% endif %}
+        </div>
+
+        <div>
+            <b>Agency:</b>
+            {% if house.agency %}
+                <input name="agency" type="text" value="{{ house.agency}}"/>
+            {% else %}
+                <input name="agency" type="text"/>Info still missing
+            {% endif %}
+        </div>
+
+        <div><input type="submit" value="Update Info"></div>
+    </form>
 
 </body>
 
