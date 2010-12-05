@@ -22,7 +22,6 @@ public class CollectActivity extends Activity {
 	private Button accept;
 	private Button release;
 	private Button takePhoto;
-	private TextView locationText;
 	private LinearLayout approvePanel;
 	private byte[] lastData;
 	
@@ -66,9 +65,6 @@ public class CollectActivity extends Activity {
 		approvePanel = (LinearLayout) findViewById(R.id.approvePanel);
 		createAcceptPanel();
 		approvePanel.setVisibility(View.INVISIBLE);
-		
-
-        locationText = (TextView) findViewById(R.id.locationText);
 
         /* the location manager is the most vital part it allows access
          * to location and GPS status services */
@@ -108,8 +104,11 @@ public class CollectActivity extends Activity {
 		accept = (Button) findViewById(R.id.acceptPhotoButton);
 		accept.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				save(lastData);
-				loadViewPlace();
+		        // Location can be null
+			    // See LocationHelper for how to emulate a location
+			    Location location = lh.getLastKnownLocation();
+				save(lastData, location);
+				loadViewPlace(location);
 			}
 		});
 		release = (Button) findViewById(R.id.releasePhotoButton);
@@ -120,16 +119,10 @@ public class CollectActivity extends Activity {
 		});
 	}
 	
-	private void save(byte[] data) {
-	    // Location can be null
-		Location location = lh.getLastKnownLocation();
-		
-		if (location !=null) {
-		  displayLocation(location);
-		}
+	private void save(byte[] data, Location location) {
 	}
 	
-	public void loadViewPlace() {
+	public void loadViewPlace(Location location) {
 		setContentView(R.layout.viewplace);
 		
 		LinearLayout imgPanel = (LinearLayout) findViewById(R.id.imgPanel);
@@ -141,33 +134,9 @@ public class CollectActivity extends Activity {
 		img.setImageBitmap(Bitmap.createScaledBitmap(bmp, 100, 100, false));		
 		imgPanel.addView(img);
 		TextView gps = (TextView) findViewById(R.id.gps);
-		//TODO(alissaf)
+		if (location != null) {
+		  String longLat = location.getLongitude() + "," + location.getLatitude();
+		  gps.setText(longLat);
+		}
 	}
-	
-	private void displayLocation(Location location) {
-
-        StringBuilder sb = new StringBuilder(512);
-
-        sb.append("Londitude: ");
-        sb.append(location.getLongitude());
-        sb.append('\n');
-
-        sb.append("Latitude: ");
-        sb.append(location.getLatitude());
-        sb.append('\n');
-
-        sb.append("Altitiude: ");
-        sb.append(location.getAltitude());
-        sb.append('\n');
-
-        sb.append("Accuracy: ");
-        sb.append(location.getAccuracy());
-        sb.append('\n');
-
-        sb.append("Timestamp: ");
-        sb.append(location.getTime());
-        sb.append('\n');
-
-        locationText.setText(sb.toString());
-    }
 }

@@ -16,6 +16,8 @@ public class LocationHelper implements LocationListener {
      * This class implements LocationListener, which listens for both
      * changes in the location of the device and changes in the status
      * of the GPS system.
+     * 
+     * Based on http://hejp.co.uk/android/android-gps-example/
      */
     public LocationHelper(LocationManager locationManager) {
         /* The location manager is the most vital part it allows access
@@ -32,7 +34,14 @@ public class LocationHelper implements LocationListener {
         /* GPS, as it turns out, consumes battery like crazy */
         lm.removeUpdates(this);
     }
-
+    
+    /**
+     * When testing this code in the emulator, you can send mock fixes by 
+     * connecting to the emulator using telnet, i.e. 
+     * <code> telnet localhost 5554′ </code>
+     * and typing:
+     * <code> geo fix -10.223 40.549 </code>
+     */
     public Location getLastKnownLocation() {
         return lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
     }
