@@ -95,6 +95,7 @@ class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 		parameters.setRotation(0);
 		parameters.set("orientation", "portrait");
 		camera.setParameters(parameters);
+		camera.setDisplayOrientation(90);
 		camera.startPreview();
 	}
 	

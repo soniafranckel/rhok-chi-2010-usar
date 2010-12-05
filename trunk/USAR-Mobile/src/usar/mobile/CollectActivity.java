@@ -41,6 +41,7 @@ public class CollectActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		mDbHelper = new ContentStorageHelper(this);
         mDbHelper.open();
 		images = new ArrayList<byte[]>();
