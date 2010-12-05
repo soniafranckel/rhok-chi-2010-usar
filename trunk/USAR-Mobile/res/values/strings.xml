@@ -6,4 +6,11 @@
 <string name="location">Location</string>
 <string name="address">Street Address</string>
 <string name="gps">GPS Location</string>
+<string-array name="dangerLevels">
+	<item>Red (urgent)</item>
+	<item>Yellow (delayed)</item>
+	<item>Green (low priority)</item>
+	<item>Black (fatalities)</item>
+</string-array>
+<string name="dangerLevel">Danger Level</string>
 </resources>
