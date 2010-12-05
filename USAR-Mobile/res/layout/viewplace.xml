@@ -6,13 +6,14 @@
 	<TextView android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:text="@string/photos"
 		android:textSize="24sp" />
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		android:orientation="horizontal" android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:id="@+id/imgPanel">
-		<ImageButton android:id="@+id/picview" android:src="@drawable/addimg" 
+	<Gallery xmlns:android="http://schemas.android.com/apk/res/android" 
+    	android:id="@+id/imgPanel"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content" />
+<!--  	<ImageButton android:id="@+id/picview" android:src="@drawable/addimg" 
 		   android:layout_width="wrap_content" android:layout_height="wrap_content"
 		   android:maxWidth="100px" android:maxHeight="100px" android:scaleType="fitXY"/>
-	</LinearLayout>
+	-->
 	<Spinner  
     	android:id="@+id/dangerLevel"  
     	android:layout_height="wrap_content"  
