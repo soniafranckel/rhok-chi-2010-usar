@@ -15,7 +15,6 @@
     	  <activity android:name=".LocationsActivity" android:theme="@android:style/Theme.Light.NoTitleBar"></activity>
     	  <activity android:name=".SettingsActivity" android:theme="@android:style/Theme.Light.NoTitleBar"></activity>
     </application>
-    
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
