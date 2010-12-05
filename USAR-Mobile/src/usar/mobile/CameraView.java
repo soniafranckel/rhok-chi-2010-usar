@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.Context;
 import android.hardware.Camera;
 import android.hardware.Camera.Size;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -80,6 +81,8 @@ class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	public void surfaceChanged(SurfaceHolder container, int format, int w, int h) {
+		Log.d("CameraView", "Surface changed");
+		
 		// Now that the size is known, set up the camera parameters and begin
 		// the preview.
 		Camera.Parameters parameters = camera.getParameters();
@@ -87,7 +90,10 @@ class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 		List<Size> sizes = parameters.getSupportedPreviewSizes();
 		Size optimalSize = getOptimalPreviewSize(sizes, w, h);
 		parameters.setPreviewSize(optimalSize.width, optimalSize.height);
-
+		//parameters.set("rotation", 90);
+		//parameters.setPreviewSize(20, 20);
+		parameters.setRotation(0);
+		parameters.set("orientation", "portrait");
 		camera.setParameters(parameters);
 		camera.startPreview();
 	}

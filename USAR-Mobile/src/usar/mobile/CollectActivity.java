@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
@@ -38,14 +41,12 @@ public class CollectActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
 		mDbHelper = new ContentStorageHelper(this);
         mDbHelper.open();
-		
 		images = new ArrayList<byte[]>();
 		loadPictureTaker();
 	}
-	private void loadPictureTaker() {
+	private void loadPictureTaker() { 
 		setContentView(R.layout.collecttab);
 
 		preview = new CameraView(this);
