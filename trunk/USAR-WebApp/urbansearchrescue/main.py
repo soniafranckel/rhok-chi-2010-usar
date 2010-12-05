@@ -8,6 +8,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
 
+from datetime import datetime
    
 
 class House(db.Model):
@@ -79,10 +80,28 @@ class NewHouse (webapp.RequestHandler):
 
 
 class UpdateHouse (webapp.RequestHandler):
-    def post(self): # just make a new house
-        House().put()
-        self.response.out.write(self.form)
+    def post(self):
+        user = users.get_current_user()
+        if not user:
+            self.redirect(users.create_login_url(self.request.uri))
 
+        house = db.get(self.request.get('house_id'))
+
+        house.updated_by = user
+        house.date_updated = datetime.now()
+
+        if self.request.get('num_people'):
+            house.num_people = int(self.request.get('num_people'))
+        if self.request.get('condition'):
+            house.condition = self.request.get('condition')
+        if self.request.get('date_found'):
+            house.date_found = self.request.get('date_found')
+        if self.request.get('agency'):
+            house.agency = self.request.get('agency')
+
+        house.put()
+
+        self.redirect('/houseinfo/?house_id' % house.key)
 
 class HouseInfo (webapp.RequestHandler):
     def get(self):
