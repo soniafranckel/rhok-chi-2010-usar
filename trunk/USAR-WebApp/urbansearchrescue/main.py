@@ -32,8 +32,8 @@ class Location(db.Model):
     agency = db.StringProperty(multiline=False) # default Null
 
     # GPS Coordinates
-    x_coord = db.StringProperty()        # making them strings so they can be assuredly compared
-    y_coord = db.StringProperty()
+    longitude = db.StringProperty()        # making them strings so they can be assuredly compared
+    latitude = db.StringProperty()
 
 
 # in case we need multiple images per location, and each has some sort of metadata
@@ -49,8 +49,8 @@ class UploadLocationImageForm(webapp.RequestHandler):
     def get(self):
         self.response.out.write("""<html><body>
                   <form action="/upload" enctype="multipart/form-data" method="post">
-                    <div>X Coordinate:<input type="text" name="x_coord"/></div>
-                    <div>Y Coordinate:<input type="text" name="y_coord"/></div>
+                    <div>Longitude:<input type="text" name="longitude"/></div>
+                    <div>Latitude:<input type="text" name="latitude"/></div>
                     <div><input type="file" name="img"/></div>
                     <div><input type="submit" value="Send Pic"></div>
                   </form>
@@ -62,20 +62,20 @@ class UploadLocationImage(webapp.RequestHandler):
     def post(self):
         require_login(self)
        
-        x_coord = self.request.get("x_coord")
-        y_coord = self.request.get("y_coord")
+        longitude = self.request.get("longitude")
+        latitude = self.request.get("latitude")
         
-        if x_coord == None or y_coord == None:
+        if longitude == None or latitude == None:
             self.redirect('/')
             return 
  
-        loc_query = Location.all().filter("x_coord =", x_coord).filter("y_coord =", y_coord)
+        loc_query = Location.all().filter("longitude =", longitude).filter("latitude =", latitude)
         if loc_query.count():
             location = loc_query[0]
         else:
             location = Location()
-            location.x_coord = self.request.get("x_coord")
-            location.y_coord = self.request.get("y_coord")
+            location.longitude = self.request.get("longitude")
+            location.latitude = self.request.get("latitude")
             location.put()
 
         locationimage = LocationImage()
