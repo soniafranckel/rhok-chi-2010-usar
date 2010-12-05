@@ -4,8 +4,8 @@
 </head>
 
 <body>
-    {% for house in houses %}
-        <div><b>House {{forloop.counter0}}:</b> <a href="/houseinfo?house_id={{house.key}}">{{house.key}}</a></div>
+    {% for location in locations %}
+        <div><b>Location {{forloop.counter0}}:</b> <a href="/locationinfo?location_id={{location.key}}">{{location.key}}</a></div>
     {% endfor %}
 
 </body>
