@@ -11,9 +11,11 @@ from google.appengine.ext import db
    
 
 class House(db.Model):
+    date_created = db.DateTimeProperty(auto_now_add=True) # the date the house was entered into the database
+
     # The person entering the data
     updated_by = db.UserProperty()
-    date_updated = db.DateTimeProperty(auto_now_add=True)
+    date_updated = db.DateTimeProperty()
 
     # The person on the field. field data (data around the X mark on the wall)
     num_people = db.IntegerProperty() # default Null
@@ -58,9 +60,6 @@ class MainPage(webapp.RequestHandler):
         for img in HouseImage.all():
             self.response.out.write("<div><img src='img?img_id=%s'></img>" %
                                           img.key())
-#        could use this later
-#        path = os.path.join(os.path.dirname(__file__), 'show_imgs.html')
-#        self.response.out.write(template.render(path, template_values))
 
 
 class NewHouse (webapp.RequestHandler):
@@ -77,6 +76,29 @@ class NewHouse (webapp.RequestHandler):
 
     def get(self):
         self.response.out.write(self.form)
+
+
+class UpdateHouse (webapp.RequestHandler):
+    def post(self): # just make a new house
+        House().put()
+        self.response.out.write(self.form)
+
+
+class HouseInfo (webapp.RequestHandler):
+    def get(self):
+        if self.request.get('house_id'):
+            self.showhouse()
+        else:
+            self.listhouses()
+
+    def showhouse(self):
+        house = db.get(self.request.get("house_id"))
+        path = os.path.join(os.path.dirname(__file__), 'houseinfo.html')
+        self.response.out.write(template.render(path, {"house": house}))
+
+    def listhouses(self):
+        path = os.path.join(os.path.dirname(__file__), 'listhouses.html')
+        self.response.out.write(template.render(path, {"houses": House().all()}))
 
 
 
@@ -96,7 +118,9 @@ application = webapp.WSGIApplication(
                                       ('/uploadform', UploadForm),
                                       ('/upload', Upload),
                                       ('/img', ImageServe),
-                                      ('/newhouse', NewHouse)],
+                                      ('/newhouse', NewHouse),
+                                      ('/houseinfo', HouseInfo),
+                                      ('/updatehouse', UpdateHouse)],
                                      debug=True)
 
 def main():
