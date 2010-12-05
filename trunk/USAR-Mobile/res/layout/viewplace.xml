@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" android:id="@+id/layout">
+	<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:text="@string/photos"
+		android:textSize="24sp" />
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:orientation="horizontal" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:id="@+id/imgPanel">
+		<ImageView android:id="@+id/picview" android:layout_width="wrap_content"
+   			android:layout_height="wrap_content"/>
+	</LinearLayout>
+	<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:text="@string/location"
+		android:textSize="24sp" />
+	<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:text="@string/address"
+		android:textSize="24sp" />
+	<TextView android:layout_width="wrap_content" android:id="@+id/address"
+		android:layout_height="wrap_content" android:text="Address Unknown"
+		android:textSize="18sp" />
+	<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:text="@string/gps"
+		android:textSize="24sp" />	
+	<TextView android:layout_width="wrap_content" android:id="@+id/gps"
+		android:layout_height="wrap_content" android:textSize="24sp" />	
+</LinearLayout>

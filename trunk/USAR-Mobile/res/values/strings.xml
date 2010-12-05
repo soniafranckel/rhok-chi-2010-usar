@@ -2,4 +2,8 @@
 <resources>
     <string name="hello">Hello World, RhokMobile!</string>
     <string name="app_name">USAR</string>
+<string name="photos">Photo</string>
+<string name="location">Location</string>
+<string name="address">Street Address</string>
+<string name="gps">GPS Location</string>
 </resources>
