@@ -9,6 +9,13 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
 
 from datetime import datetime
+
+
+def require_login(handler):
+    user = users.get_current_user()
+    if not user:
+        handler.redirect(users.create_login_url(handler.request.uri))
+       
    
 
 class House(db.Model):
@@ -45,9 +52,7 @@ class UploadForm(webapp.RequestHandler):
 
 class Upload(webapp.RequestHandler):
     def post(self):
-        user = users.get_current_user()
-        if not user:
-            self.redirect(users.create_login_url(self.request.uri))
+        require_login(self)
 
         houseimage = HouseImage()
         image = self.request.get("img")
@@ -58,10 +63,7 @@ class Upload(webapp.RequestHandler):
 
 class MainPage(webapp.RequestHandler):
     def get(self):
-        for img in HouseImage.all():
-            self.response.out.write("<div><img src='img?img_id=%s'></img>" %
-                                          img.key())
-
+        self.redirect("/houseinfo")
 
 class NewHouse (webapp.RequestHandler):
     form = """%i houses <html><body>
@@ -81,9 +83,7 @@ class NewHouse (webapp.RequestHandler):
 
 class UpdateHouse (webapp.RequestHandler):
     def post(self):
-        user = users.get_current_user()
-        if not user:
-            self.redirect(users.create_login_url(self.request.uri))
+        require_login(self)
 
         house = db.get(self.request.get('house_id'))
 
