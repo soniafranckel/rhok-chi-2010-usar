@@ -5,7 +5,12 @@
 </head>
 
 <body>
+    {% for image in house.images %}
+        <span><img src="{{image.url}}"/></span>
+    {% endfor %}
+
     <form action="/updatehouse" enctype="multipart/form-data" method="post">
+
         <input style="display:none" type="text" name="house_id" value="{{house.key}}">
         <div><b>ID:</b> {{house.key}}</div>
         <div><b>Date House Entered Into DB:</b> {{house.date_created}}</div>
