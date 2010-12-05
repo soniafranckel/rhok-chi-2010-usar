@@ -47,48 +47,50 @@
 
                                 <br/>
                                 <div>
-                                    <b>Num People:</b>
-
                                     {% if location.num_people %}
+                                        <b>Num People:</b><br/>
                                         <input name="num_people" class="text" type="text" value="{{ location.num_people}}"/>
                                     {% else %}
-                                        <input name="num_people" class="text" type="text"/>Info still missing
+                                        <b>Num People:</b> (Info still missing)<br/>
+                                        <input name="num_people" class="text" type="text"/>
                                     {% endif %}
                                 </div>
 
                                 <div>
-                                    <b>Condition:</b>
                                     {% if location.condition %}
+                                        <b>Condition:</b><br/>
                                         <input name="condition" class="text" type="text" value="{{ location.condition}}"/>
                                     {% else %}
-                                        <input name="condition" class="text" type="text"/>Info still missing
+                                        <b>Condition:</b> (Info still missing)<br/>
+                                        <input name="condition" class="text" type="text"/>
                                     {% endif %}
                                 </div>
 
                                 <div>
-                                    <b>Date Found:</b>
                                     {% if location.date_found %}
+                                        <b>Date Found:</b><br/>
                                         Month: <input name="date_found_month" class="text" type="text" value="{{ location.date_found.month}}"  size="4"/>
                                         Day: <input name="date_found_day" class="text" type="text" value="{{ location.date_found.day}}" size="4"/>
                                         Year: <input name="date_found_year" class="text" type="text" value="{{ location.date_found.year}}" size="4"/>
                                         Hour: <input name="date_found_hour" class="text" type="text" value="{{ location.date_found.hour}}" size="4"/>
                                         Minute: <input name="date_found_minute" class="text" type="text" value="{{ location.date_found.minute}}" size="4"/>
                                     {% else %}
+                                        <b>Date Found:</b> (Info still missing)<br/>
                                         Month: <input name="date_found_month" class="text" type="text" size="4"/>
                                         Day: <input name="date_found_day" class="text" type="text" size="4"/>
                                         Year: <input name="date_found_year" class="text" type="text" size="4"/>
                                         Hour: <input name="date_found_hour" class="text" type="text" value="0" size="4"/>
                                         Minute: <input name="date_found_minute" class="text" type="text" value="0" size="4"/>
-                                        Info still missing
                                     {% endif %}
                                 </div>
 
                                 <div>
-                                    <b>Agency:</b>
                                     {% if location.agency %}
+                                        <b>Agency:</b><br/>
                                         <input name="agency" class="text" type="text" value="{{ location.agency}}"/>
                                     {% else %}
-                                        <input name="agency" class="text" type="text"/>Info still missing
+                                        <b>Agency:</b>(Info still missing)<br/>
+                                        <input name="agency" class="text" type="text"/>
                                     {% endif %}
                                 </div>
 
