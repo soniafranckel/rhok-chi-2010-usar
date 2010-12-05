@@ -5,26 +5,26 @@
 </head>
 
 <body>
-    {% for image in house.images %}
+    {% for image in location.images %}
         <span><img src="{{image.url}}"/></span>
     {% endfor %}
 
-    <form action="/updatehouse" enctype="multipart/form-data" method="post">
+    <form action="/updatelocation" enctype="multipart/form-data" method="post">
 
-        <input style="display:none" type="text" name="house_id" value="{{house.key}}">
-        <div><b>ID:</b> {{house.key}}</div>
-        <div><b>Date House Entered Into DB:</b> {{house.date_created}}</div>
+        <input style="display:none" type="text" name="location_id" value="{{location.key}}">
+        <div><b>ID:</b> {{location.key}}</div>
+        <div><b>Date Location Entered Into DB:</b> {{location.date_created}}</div>
 
         <br/>
-        <div><b>Updated By:</b> {{house.updated_by.nickname}}</div>
-        <div><b>Date Last Updated:</b> {{house.date_updated}}</div>
+        <div><b>Updated By:</b> {{location.updated_by.nickname}}</div>
+        <div><b>Date Last Updated:</b> {{location.date_updated}}</div>
 
         <br/>
         <div>
             <b>Num People:</b>
 
-            {% if house.num_people %}
-                <input name="num_people" type="text" value="{{ house.num_people}}"/>
+            {% if location.num_people %}
+                <input name="num_people" type="text" value="{{ location.num_people}}"/>
             {% else %}
                 <input name="num_people" type="text"/>Info still missing
             {% endif %}
@@ -32,8 +32,8 @@
 
         <div>
             <b>Condition:</b>
-            {% if house.condition %}
-                <input name="condition" type="text" value="{{ house.condition}}"/>
+            {% if location.condition %}
+                <input name="condition" type="text" value="{{ location.condition}}"/>
             {% else %}
                 <input name="condition" type="text"/>Info still missing
             {% endif %}
@@ -41,8 +41,8 @@
 
         <div>
             <b>Date Found:</b>
-            {% if house.date_found %}
-                <input name="date_found" type="text" value="{{ house.date_found}}"/>
+            {% if location.date_found %}
+                <input name="date_found" type="text" value="{{ location.date_found}}"/>
             {% else %}
                 <input name="date_found" type="text"/>Info still missing
             {% endif %}
@@ -50,8 +50,8 @@
 
         <div>
             <b>Agency:</b>
-            {% if house.agency %}
-                <input name="agency" type="text" value="{{ house.agency}}"/>
+            {% if location.agency %}
+                <input name="agency" type="text" value="{{ location.agency}}"/>
             {% else %}
                 <input name="agency" type="text"/>Info still missing
             {% endif %}

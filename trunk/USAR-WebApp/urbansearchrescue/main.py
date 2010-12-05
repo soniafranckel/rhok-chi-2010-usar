@@ -17,13 +17,15 @@ def require_login(handler):
         handler.redirect(users.create_login_url(handler.request.uri))
        
 
-class House(db.Model):
-    date_created = db.DateTimeProperty(auto_now_add=True) # the date the house was entered into the database
+class Location(db.Model):
+    date_created = db.DateTimeProperty(auto_now_add=True) # the date the location was entered into the database
 
     # The person entering the data
     updated_by = db.UserProperty()
     date_updated = db.DateTimeProperty()
 
+
+    
     # The person on the field. field data (data around the X mark on the wall)
     num_people = db.IntegerProperty() # default Null
     condition = db.StringProperty(multiline=False) # default Null
@@ -31,20 +33,20 @@ class House(db.Model):
     agency = db.StringProperty(multiline=False) # default Null
 
 
-# in case we need multiple images per house, and each has some sort of metadata
-class HouseImage(db.Model):
-    house = db.ReferenceProperty(House, collection_name='images', required=False) # should be required eventually
+# in case we need multiple images per location, and each has some sort of metadata
+class LocationImage(db.Model):
+    location = db.ReferenceProperty(Location, collection_name='images', required=False) # should be required eventually
     image = db.BlobProperty()
     def url(self):
         return 'img?img_id=%s' % self.key()
 
 
 # Just for testing purposes
-class UploadHouseImageForm(webapp.RequestHandler):
+class UploadLocationImageForm(webapp.RequestHandler):
     def get(self):
         self.response.out.write("""<html><body>
                   <form action="/upload" enctype="multipart/form-data" method="post">
-                    <div>House ID:<input type="text" name="house_id"/></div>
+                    <div>Location ID:<input type="text" name="location_id"/></div>
                     <div><input type="file" name="img"/></div>
                     <div><input type="submit" value="Send Pic"></div>
                   </form>
@@ -52,99 +54,99 @@ class UploadHouseImageForm(webapp.RequestHandler):
               </html>""") 
 
 
-class UploadHouseImage(webapp.RequestHandler):
+class UploadLocationImage(webapp.RequestHandler):
     def post(self):
         require_login(self)
 
-        houseimage = HouseImage()
+        locationimage = LocationImage()
         image = self.request.get("img")
-        houseimage.house = db.get(self.request.get("house_id"))
-        houseimage.image = db.Blob(image)
-        houseimage.put()
+        locationimage.location = db.get(self.request.get("location_id"))
+        locationimage.image = db.Blob(image)
+        locationimage.put()
         self.redirect('/uploadform')
 
 
 class MainPage(webapp.RequestHandler):
     def get(self):
-        self.redirect('/houseinfo')
+        self.redirect('/locationinfo')
         return
 
 # Just for testing purposes
-class NewHouse (webapp.RequestHandler):
-    form = """%i houses <html><body>
-                  <form action="/newhouse" enctype="multipart/form-data" method="post">
-                    <div><input type="submit" value="New House"></div>
+class NewLocation (webapp.RequestHandler):
+    form = """%i locations <html><body>
+                  <form action="/newlocation" enctype="multipart/form-data" method="post">
+                    <div><input type="submit" value="New Location"></div>
                   </form>
                 </body>
-              </html>""" % House.all().count()
+              </html>""" % Location.all().count()
 
-    def post(self): # just make a new house
-        House().put()
+    def post(self): # just make a new location
+        Location().put()
         self.response.out.write(self.form)
 
     def get(self):
         self.response.out.write(self.form)
 
 
-class UpdateHouse (webapp.RequestHandler):
+class UpdateLocation (webapp.RequestHandler):
     def post(self):
         require_login(self)
 
-        house = db.get(self.request.get('house_id'))
+        location = db.get(self.request.get('location_id'))
 
-        house.updated_by = users.get_current_user()
-        house.date_updated = datetime.now()
+        location.updated_by = users.get_current_user()
+        location.date_updated = datetime.now()
 
         if self.request.get('num_people'):
-            house.num_people = int(self.request.get('num_people'))
+            location.num_people = int(self.request.get('num_people'))
         if self.request.get('condition'):
-            house.condition = self.request.get('condition')
+            location.condition = self.request.get('condition')
         if self.request.get('date_found'):
-            house.date_found = self.request.get('date_found')
+            location.date_found = self.request.get('date_found')
         if self.request.get('agency'):
-            house.agency = self.request.get('agency')
+            location.agency = self.request.get('agency')
 
-        house.put()
+        location.put()
 
-        self.redirect('/houseinfo?house_id=%s' % house.key())
+        self.redirect('/locationinfo?location_id=%s' % location.key())
 
-class HouseInfo (webapp.RequestHandler):
+class LocationInfo (webapp.RequestHandler):
     def get(self):
-        if self.request.get('house_id'):
-            self.showhouse()
+        if self.request.get('location_id'):
+            self.showlocation()
         else:
-            self.listhouses()
+            self.listlocations()
 
-    def showhouse(self):
-        house = db.get(self.request.get("house_id"))
-        path = os.path.join(os.path.dirname(__file__), 'houseinfo.html')
-        self.response.out.write(template.render(path, {"house": house}))
+    def showlocation(self):
+        location = db.get(self.request.get("location_id"))
+        path = os.path.join(os.path.dirname(__file__), 'locationinfo.html')
+        self.response.out.write(template.render(path, {"location": location}))
 
-    def listhouses(self):
-        path = os.path.join(os.path.dirname(__file__), 'listhouses.html')
-        self.response.out.write(template.render(path, {"houses": House().all()}))
+    def listlocations(self):
+        path = os.path.join(os.path.dirname(__file__), 'listlocations.html')
+        self.response.out.write(template.render(path, {"locations": Location().all()}))
 
 
 
 class ImageServe (webapp.RequestHandler):
     def get(self):
-        houseimage = db.get(self.request.get("img_id"))
+        locationimage = db.get(self.request.get("img_id"))
      
-        if houseimage.image:
+        if locationimage.image:
             self.response.headers['Content-Type'] = "image/jpg"
-            self.response.out.write(houseimage.image)
+            self.response.out.write(locationimage.image)
         else:
             self.error(404)
 
 
 application = webapp.WSGIApplication(
                                      [('/', MainPage),
-                                      ('/uploadform', UploadHouseImageForm),
-                                      ('/upload', UploadHouseImage),
+                                      ('/uploadform', UploadLocationImageForm),
+                                      ('/upload', UploadLocationImage),
                                       ('/img', ImageServe),
-                                      ('/newhouse', NewHouse),
-                                      ('/houseinfo', HouseInfo),
-                                      ('/updatehouse', UpdateHouse)],
+                                      ('/newlocation', NewLocation),
+                                      ('/locationinfo', LocationInfo),
+                                      ('/updatelocation', UpdateLocation)],
                                      debug=True)
 
 def main():
