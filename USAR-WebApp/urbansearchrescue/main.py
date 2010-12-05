@@ -24,13 +24,16 @@ class Location(db.Model):
     updated_by = db.UserProperty()
     date_updated = db.DateTimeProperty()
 
-
     
     # The person on the field. field data (data around the X mark on the wall)
     num_people = db.IntegerProperty() # default Null
     condition = db.StringProperty(multiline=False) # default Null
     date_found = db.DateTimeProperty() # default Null
     agency = db.StringProperty(multiline=False) # default Null
+
+    # GPS Coordinates
+    x_coord = db.StringProperty()        # making them strings so they can be assuredly compared
+    y_coord = db.StringProperty()
 
 
 # in case we need multiple images per location, and each has some sort of metadata
@@ -46,7 +49,8 @@ class UploadLocationImageForm(webapp.RequestHandler):
     def get(self):
         self.response.out.write("""<html><body>
                   <form action="/upload" enctype="multipart/form-data" method="post">
-                    <div>Location ID:<input type="text" name="location_id"/></div>
+                    <div>X Coordinate:<input type="text" name="x_coord"/></div>
+                    <div>Y Coordinate:<input type="text" name="y_coord"/></div>
                     <div><input type="file" name="img"/></div>
                     <div><input type="submit" value="Send Pic"></div>
                   </form>
@@ -57,10 +61,26 @@ class UploadLocationImageForm(webapp.RequestHandler):
 class UploadLocationImage(webapp.RequestHandler):
     def post(self):
         require_login(self)
+       
+        x_coord = self.request.get("x_coord")
+        y_coord = self.request.get("y_coord")
+        
+        if x_coord == None or y_coord == None:
+            self.redirect('/')
+            return 
+ 
+        loc_query = Location.all().filter("x_coord =", x_coord).filter("y_coord =", y_coord)
+        if loc_query.count():
+            location = loc_query[0]
+        else:
+            location = Location()
+            location.x_coord = self.request.get("x_coord")
+            location.y_coord = self.request.get("y_coord")
+            location.put()
 
         locationimage = LocationImage()
         image = self.request.get("img")
-        locationimage.location = db.get(self.request.get("location_id"))
+        locationimage.location = location
         locationimage.image = db.Blob(image)
         locationimage.put()
         self.redirect('/uploadform')
