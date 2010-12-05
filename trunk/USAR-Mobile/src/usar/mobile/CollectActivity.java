@@ -1,6 +1,10 @@
 package usar.mobile;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
@@ -27,6 +31,7 @@ public class CollectActivity extends Activity {
 	private Button takePhoto;
 	private LinearLayout approvePanel;
 	private byte[] lastData;
+	private ArrayList<byte[]> images;
 	
     private LocationHelper lh;
 
@@ -34,7 +39,10 @@ public class CollectActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		images = new ArrayList<byte[]>();
+		loadPictureTaker();
+	}
+	private void loadPictureTaker() {
 		setContentView(R.layout.collecttab);
 
 		preview = new CameraView(this);
@@ -72,7 +80,7 @@ public class CollectActivity extends Activity {
         /* the location manager is the most vital part it allows access
          * to location and GPS status services */
         lh = new LocationHelper((LocationManager) getSystemService(LOCATION_SERVICE));
-	}    
+	}
 	
 	@Override
     protected void onResume() {
@@ -110,7 +118,7 @@ public class CollectActivity extends Activity {
 		        // Location can be null
 			    // See LocationHelper for how to emulate a location
 			    Location location = lh.getLastKnownLocation();
-				save(lastData, location);
+				images.add(lastData);
 				loadViewPlace(location);
 			}
 		});
@@ -122,30 +130,29 @@ public class CollectActivity extends Activity {
 		});
 	}
 	
-	private void save(byte[] data, Location location) {
+	private void save(byte[] data, Location location, String dangerLevel) {
 	    DataTransferUtil.uploadData(location);
 	}
 	
-	public void loadViewPlace(Location location) {
+	public void loadViewPlace(final Location location) {
 		setContentView(R.layout.viewplace);
 		
 		LinearLayout imgPanel = (LinearLayout) findViewById(R.id.imgPanel);
-		//ImageView picview = (ImageView) findViewById(R.id.picview);
-		// Add click handler
-		//TODO: Iterate through all images and add them
-		ImageView img = new ImageView(this);
-		Bitmap bmp=BitmapFactory.decodeByteArray(lastData, 0, lastData.length);
-		img.setImageBitmap(Bitmap.createScaledBitmap(bmp, 100, 100, false));
-		imgPanel.addView(img);
+		for (byte[] data : images) {
+			ImageView img = new ImageView(this);
+			Bitmap bmp=BitmapFactory.decodeByteArray(data, 0, data.length);
+			img.setImageBitmap(Bitmap.createScaledBitmap(bmp, 100, 100, false));
+			imgPanel.addView(img);
+		}
 		ImageButton addImage = (ImageButton) findViewById(R.id.picview);
 		addImage.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				//TODO
+				loadPictureTaker();
 			}
 		});
 	
 		// Danger level
-		Spinner dangerLevel = (Spinner) findViewById(R.id.dangerLevel);
+		final Spinner dangerLevel = (Spinner) findViewById(R.id.dangerLevel);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
 	            this, R.array.dangerLevels, android.R.layout.simple_spinner_item);
 			/*@Override
@@ -168,6 +175,43 @@ public class CollectActivity extends Activity {
 		if (location != null) {
 		  String longLat = location.getLongitude() + "," + location.getLatitude();
 		  gps.setText(longLat);
+		} else {
+			gps.setText("Unknown");
 		}
+		
+		Button submit = (Button) findViewById(R.id.submit);
+		Button delete = (Button) findViewById(R.id.delete);
+		submit.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				save(location, (String) dangerLevel.getSelectedItem());
+				clear();
+			}
+		});
+		delete.setOnClickListener(new OnClickListener() {	
+			public void onClick(View v) {
+				new AlertDialog.Builder(CollectActivity.this)
+		        .setTitle("Delete location images")
+		        .setMessage("Are you sure you want to delete these images?")
+		        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						clear();
+					}
+		        }).setNegativeButton("No", null)
+		        .show();
+
+			}
+		});
+		
+	}
+	
+	private void save(Location location, String dangerLevel) {
+		for (byte[] image : images) {
+			save(image, location, dangerLevel);
+		}
+	}
+	
+	private void clear() {
+		images = new ArrayList<byte[]>();
+		CollectActivity.this.loadPictureTaker();
 	}
 }
