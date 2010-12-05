@@ -36,10 +36,16 @@ class Location(db.Model):
     latitude = db.StringProperty()
 
 
+class ImagePart(db.Model):
+    part = db.BlobProperty()
+
+
 # in case we need multiple images per location, and each has some sort of metadata
 class LocationImage(db.Model):
     location = db.ReferenceProperty(Location, collection_name='images', required=False) # should be required eventually
-    image = db.BlobProperty()
+    image_1 = db.ReferenceProperty(ImagePart, collection_name='imageparts_1', required=False) # should be required eventually
+    image_2 = db.ReferenceProperty(ImagePart, collection_name='imageparts_2', required=False) # should be required eventually
+
     def url(self):
         return 'img?img_id=%s' % self.key()
 
@@ -81,8 +87,20 @@ class UploadLocationImage(webapp.RequestHandler):
         locationimage = LocationImage()
         image = self.request.get("img")
         locationimage.location = location
-        locationimage.image = db.Blob(image)
+
+        image_1 = ImagePart()
+        image_1.part = db.Blob(image[:1000000])
+        image_1.put()
+
+        image_2 = ImagePart()
+        image_2.part = db.Blob(image[1000000:])
+        image_2.put()
+        
         locationimage.put()
+        locationimage.image_1 = image_1
+        locationimage.image_2 = image_2
+        locationimage.put()
+
         self.redirect('/uploadform')
 
 
@@ -157,9 +175,10 @@ class ImageServe (webapp.RequestHandler):
     def get(self):
         locationimage = db.get(self.request.get("img_id"))
      
-        if locationimage.image:
+        if locationimage.image_1:
             self.response.headers['Content-Type'] = "image/jpg"
-            self.response.out.write(locationimage.image)
+            self.response.out.write(locationimage.image_1.part)
+            self.response.out.write(locationimage.image_2.part)
         else:
             self.error(404)
 
