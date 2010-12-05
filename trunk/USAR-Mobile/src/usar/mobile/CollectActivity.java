@@ -15,14 +15,19 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView.ScaleType;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Gallery;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class CollectActivity extends Activity {
 	private CameraView preview;
@@ -137,19 +142,19 @@ public class CollectActivity extends Activity {
 	public void loadViewPlace(final Location location) {
 		setContentView(R.layout.viewplace);
 		
-		LinearLayout imgPanel = (LinearLayout) findViewById(R.id.imgPanel);
-		for (byte[] data : images) {
-			ImageView img = new ImageView(this);
-			Bitmap bmp=BitmapFactory.decodeByteArray(data, 0, data.length);
-			img.setImageBitmap(Bitmap.createScaledBitmap(bmp, 100, 100, false));
-			imgPanel.addView(img);
-		}
-		ImageButton addImage = (ImageButton) findViewById(R.id.picview);
-		addImage.setOnClickListener(new OnClickListener() {
+		ImageButton picview = new ImageButton(this);
+		picview.setImageResource(R.drawable.addimg);
+		picview.setMaxHeight(100);
+		picview.setMaxWidth(100);
+		picview.setScaleType(ScaleType.FIT_XY);
+		picview.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				loadPictureTaker();
 			}
 		});
+		
+		Gallery imgPanel = (Gallery) findViewById(R.id.imgPanel);
+		imgPanel.setAdapter(new ImageAdapter(this, images, picview));
 	
 		// Danger level
 		final Spinner dangerLevel = (Spinner) findViewById(R.id.dangerLevel);
