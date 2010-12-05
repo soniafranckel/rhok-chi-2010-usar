@@ -7,20 +7,23 @@
 		android:layout_height="wrap_content" android:text="@string/photos"
 		android:textSize="24sp" />
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		android:orientation="horizontal" android:layout_width="fill_parent"
+		android:orientation="horizontal" android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:id="@+id/imgPanel">
-		<ImageView android:id="@+id/picview" android:layout_width="wrap_content"
-   			android:layout_height="wrap_content"/>
+		<ImageButton android:id="@+id/picview" android:src="@drawable/addimg" 
+		   android:layout_width="wrap_content" android:layout_height="wrap_content"
+		   android:maxWidth="100px" android:maxHeight="100px" android:scaleType="fitXY"/>
 	</LinearLayout>
+	<Spinner  
+    	android:id="@+id/dangerLevel"  
+    	android:layout_height="wrap_content"  
+    	android:prompt="@string/dangerLevel"  
+    	android:layout_width="fill_parent"  
+    	android:entries="@array/dangerLevels">  
+	</Spinner>  
+	
 	<TextView android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:text="@string/location"
 		android:textSize="24sp" />
-	<TextView android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:text="@string/address"
-		android:textSize="24sp" />
-	<TextView android:layout_width="wrap_content" android:id="@+id/address"
-		android:layout_height="wrap_content" android:text="Address Unknown"
-		android:textSize="18sp" />
 	<TextView android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:text="@string/gps"
 		android:textSize="24sp" />	

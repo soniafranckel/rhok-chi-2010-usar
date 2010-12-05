@@ -11,10 +11,13 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 public class CollectActivity extends Activity {
@@ -132,8 +135,35 @@ public class CollectActivity extends Activity {
 		//TODO: Iterate through all images and add them
 		ImageView img = new ImageView(this);
 		Bitmap bmp=BitmapFactory.decodeByteArray(lastData, 0, lastData.length);
-		img.setImageBitmap(Bitmap.createScaledBitmap(bmp, 100, 100, false));		
+		img.setImageBitmap(Bitmap.createScaledBitmap(bmp, 100, 100, false));
 		imgPanel.addView(img);
+		ImageButton addImage = (ImageButton) findViewById(R.id.picview);
+		addImage.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				//TODO
+			}
+		});
+	
+		// Danger level
+		Spinner dangerLevel = (Spinner) findViewById(R.id.dangerLevel);
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+	            this, R.array.dangerLevels, android.R.layout.simple_spinner_item);
+			/*@Override
+			public View getView(int position, View convertView, ViewGroup parent) {
+				ViewInflate inflater=CollectActivity.this.getViewInflate();
+				View row=inflater.inflate(R.layout.row, null, null);
+				TextView label=(TextView)row.findViewById(R.id.label);
+
+				label.setText(items[position]);
+
+				if (items[position].length()>4) {
+				ImageView icon=(ImageView)row.findViewById(R.id.icon);
+
+				icon.setImageResource(R.drawable.delete);
+			}*/
+	    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	    dangerLevel.setAdapter(adapter);
+	    
 		TextView gps = (TextView) findViewById(R.id.gps);
 		if (location != null) {
 		  String longLat = location.getLongitude() + "," + location.getLatitude();
