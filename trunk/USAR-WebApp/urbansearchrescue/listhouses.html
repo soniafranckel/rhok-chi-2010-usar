@@ -1,0 +1,15 @@
+<html>
+
+<head>
+</head>
+
+<body>
+    {% for house in houses %}
+        <div><b>House {{forloop.counter0}}:</b> <a href="/houseinfo?house_id={{house.key}}">{{house.key}}</a></div>
+    {% endfor %}
+
+</body>
+
+
+</html>
+
