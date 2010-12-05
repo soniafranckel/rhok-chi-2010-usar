@@ -13,6 +13,16 @@
 	</FrameLayout>
 
 	<Button android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:id="@+id/buttonClick"
+		android:layout_height="wrap_content" android:id="@+id/takePhotoButton"
 		android:text="Take photo" android:layout_gravity="center"></Button>
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:orientation="horizontal" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:id="@+id/approvePanel">
+		<Button android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:id="@+id/acceptPhotoButton"
+			android:text="Accept" android:layout_gravity="left"></Button>
+		<Button android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:id="@+id/releasePhotoButton"
+			android:text="Release" android:layout_gravity="right"></Button>
+	</LinearLayout>
 </LinearLayout>

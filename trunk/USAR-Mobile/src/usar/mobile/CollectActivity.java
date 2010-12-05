@@ -1,39 +1,30 @@
 package usar.mobile;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 import android.app.Activity;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 public class CollectActivity extends Activity {
 	private CameraView preview;
+	private Button accept;
+	private Button release;
+	private Button takePhoto;
+	private LinearLayout approvePanel;
+	private byte[] lastData;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// Hide the window title.
-		//          requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-		// Create our Preview view and set it as the content of our activity.
-		//        mPreview = new CameraView(this);
-		//        setContentView(mPreview);
-		//          Camera camera = Camera.open();
-		//           camera.startPreview();
 		setContentView(R.layout.collecttab);
-
-
 
 		preview = new CameraView(this);
 		((FrameLayout) findViewById(R.id.preview)).addView(preview);
@@ -52,33 +43,49 @@ public class CollectActivity extends Activity {
 		/** Handles data for jpeg picture */
 		final PictureCallback jpegCallback = new PictureCallback() {
 			public void onPictureTaken(byte[] data, Camera camera) {
-				FileOutputStream outStream = null;
-				try {
-					// write to local sandbox file system
-					// outStream =
-					// CameraDemo.this.openFileOutput(String.format("%d.jpg",
-					// System.currentTimeMillis()), 0);
-					// Or write to sdcard
-					outStream = new FileOutputStream(String.format(
-							"/sdcard/%d.jpg", System.currentTimeMillis()));
-					outStream.write(data);
-					outStream.close();
-					Log.e("CollectActivity", "onPictureTaken - wrote bytes: " + data.length);
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} finally {
-				}
+				lastData = data;
+				switchToAccept();
 			}
 		};
-		Button buttonClick = (Button) findViewById(R.id.buttonClick);
-		buttonClick.setOnClickListener(new OnClickListener() {
+		takePhoto = (Button) findViewById(R.id.takePhotoButton);
+		takePhoto.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				preview.camera.takePicture(shutterCallback, rawCallback,
 						jpegCallback);
 			}
 		});
-
+		approvePanel = (LinearLayout) findViewById(R.id.approvePanel);
+		createAcceptPanel();
+		approvePanel.setVisibility(View.INVISIBLE);
+	}
+	
+	private void switchToAccept() {
+		takePhoto.setVisibility(View.INVISIBLE);
+		approvePanel.setVisibility(View.VISIBLE);
+	}
+	private void switchToTakePhoto() {
+		takePhoto.setVisibility(View.VISIBLE);
+		approvePanel.setVisibility(View.INVISIBLE);
+		preview.camera.startPreview();
+	}
+	
+	private void createAcceptPanel() {
+		accept = (Button) findViewById(R.id.acceptPhotoButton);
+		accept.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				save(lastData);
+			}
+		});
+		release = (Button) findViewById(R.id.releasePhotoButton);
+		release.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				lastData = null;
+				switchToTakePhoto();
+			}
+		});
+	}
+	
+	private void save(byte[] data) {
+		//TODO
 	}
 }
