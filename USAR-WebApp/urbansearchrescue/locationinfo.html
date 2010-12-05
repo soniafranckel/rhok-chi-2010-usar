@@ -1,79 +1,127 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="/stylesheets/main.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/stylesheets/lazybreeze.css" type="text/css" media="screen" />
     <title>Location Info</title>
 </head>
 
+
 <body>
-    {% for image in location.images %}
-        <span><img src="{{image.url}}"/></span>
-    {% endfor %}
+<div id="wrapper">
+	<div id="header-wrapper">
+		<div id="header">
+			<div id="logo">
+				<h1>Edit Location</h1>
+			</div>
+			<div id="menu">
+				<ul>
+					<li class="current_page_item"><a href="#">Home</a></li>
+					<li><a href="/locationinfo">List Locations</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- end #header -->
+	<div id="page">
+		<div id="page-bgtop">
+			<div id="page-bgbtm">
+				<div id="content">
+					<div class="post">
+						<h2 class="title"><a href="#">Location Info </a></h2>
+						<div style="clear: both;">&nbsp;</div>
+						<div class="entry">
 
-    <form action="/updatelocation" enctype="multipart/form-data" method="post">
+                            <form action="/updatelocation" enctype="multipart/form-data" method="post">
 
-        <input style="display:none" type="text" name="location_id" value="{{location.key}}">
-        <div><b>ID:</b> {{location.key}}</div>
-        <div><b>Date Location Entered Into DB:</b> {{location.date_created}}</div>
+                                <input style="display:none" class="text" type="text" name="location_id" value="{{location.key}}">
+                                <div><b>ID:</b> {{location.key}}</div>
+                                <div><b>Date Location Entered Into DB:</b> {{location.date_created}}</div>
 
-        <br/>
-        <div><b>Updated By:</b> {{location.updated_by.nickname}}</div>
-        <div><b>Date Last Updated:</b> {{location.date_updated}}</div>
+                                <br/>
+                                <div><b>Updated By:</b> {{location.updated_by.nickname}}</div>
+                                <div><b>Date Last Updated:</b> {{location.date_updated}}</div>
 
 
-        <div><b>X Coordinate</b> {{location.x_coord}}</div>
-        <div><b>Y Coordinate</b> {{location.y_coord}}</div>
+                                <div><b>X Coordinate</b> {{location.x_coord}}</div>
+                                <div><b>Y Coordinate</b> {{location.y_coord}}</div>
 
-        <br/>
-        <div>
-            <b>Num People:</b>
+                                <br/>
+                                <div>
+                                    <b>Num People:</b>
 
-            {% if location.num_people %}
-                <input name="num_people" type="text" value="{{ location.num_people}}"/>
-            {% else %}
-                <input name="num_people" type="text"/>Info still missing
-            {% endif %}
-        </div>
+                                    {% if location.num_people %}
+                                        <input name="num_people" class="text" type="text" value="{{ location.num_people}}"/>
+                                    {% else %}
+                                        <input name="num_people" class="text" type="text"/>Info still missing
+                                    {% endif %}
+                                </div>
 
-        <div>
-            <b>Condition:</b>
-            {% if location.condition %}
-                <input name="condition" type="text" value="{{ location.condition}}"/>
-            {% else %}
-                <input name="condition" type="text"/>Info still missing
-            {% endif %}
-        </div>
+                                <div>
+                                    <b>Condition:</b>
+                                    {% if location.condition %}
+                                        <input name="condition" class="text" type="text" value="{{ location.condition}}"/>
+                                    {% else %}
+                                        <input name="condition" class="text" type="text"/>Info still missing
+                                    {% endif %}
+                                </div>
 
-        <div>
-            <b>Date Found:</b>
-            {% if location.date_found %}
-                Month: <input name="date_found_month" type="text" value="{{ location.date_found.month}}"  size="4"/>
-                Day: <input name="date_found_day" type="text" value="{{ location.date_found.day}}" size="4"/>
-                Year: <input name="date_found_year" type="text" value="{{ location.date_found.year}}" size="4"/>
-                Hour: <input name="date_found_hour" type="text" value="{{ location.date_found.hour}}" size="4"/>
-                Minute: <input name="date_found_minute" type="text" value="{{ location.date_found.minute}}" size="4"/>
-            {% else %}
-                Month: <input name="date_found_month" type="text" size="4"/>
-                Day: <input name="date_found_day" type="text" size="4"/>
-                Year: <input name="date_found_year" type="text" size="4"/>
-                Hour: <input name="date_found_hour" type="text" value="0" size="4"/>
-                Minute: <input name="date_found_minute" type="text" value="0" size="4"/>
-                Info still missing
-            {% endif %}
-        </div>
+                                <div>
+                                    <b>Date Found:</b>
+                                    {% if location.date_found %}
+                                        Month: <input name="date_found_month" class="text" type="text" value="{{ location.date_found.month}}"  size="4"/>
+                                        Day: <input name="date_found_day" class="text" type="text" value="{{ location.date_found.day}}" size="4"/>
+                                        Year: <input name="date_found_year" class="text" type="text" value="{{ location.date_found.year}}" size="4"/>
+                                        Hour: <input name="date_found_hour" class="text" type="text" value="{{ location.date_found.hour}}" size="4"/>
+                                        Minute: <input name="date_found_minute" class="text" type="text" value="{{ location.date_found.minute}}" size="4"/>
+                                    {% else %}
+                                        Month: <input name="date_found_month" class="text" type="text" size="4"/>
+                                        Day: <input name="date_found_day" class="text" type="text" size="4"/>
+                                        Year: <input name="date_found_year" class="text" type="text" size="4"/>
+                                        Hour: <input name="date_found_hour" class="text" type="text" value="0" size="4"/>
+                                        Minute: <input name="date_found_minute" class="text" type="text" value="0" size="4"/>
+                                        Info still missing
+                                    {% endif %}
+                                </div>
 
-        <div>
-            <b>Agency:</b>
-            {% if location.agency %}
-                <input name="agency" type="text" value="{{ location.agency}}"/>
-            {% else %}
-                <input name="agency" type="text"/>Info still missing
-            {% endif %}
-        </div>
+                                <div>
+                                    <b>Agency:</b>
+                                    {% if location.agency %}
+                                        <input name="agency" class="text" type="text" value="{{ location.agency}}"/>
+                                    {% else %}
+                                        <input name="agency" class="text" type="text"/>Info still missing
+                                    {% endif %}
+                                </div>
 
-        <div><input type="submit" value="Update Info"></div>
-    </form>
+                                <div><input class="submit" type="submit" value="Update Info"></div>
+                            </form>
 
+						</div>
+					</div>
+					<div style="clear: both;">&nbsp;</div>
+				</div>
+				<!-- end #content -->
+				<div id="sidebar">
+					<ul>
+						<li>
+							<ul>
+                                {% for image in location.images %}
+                                    <li><img src="{{image.url}}"/></li>
+                                {% endfor %}
+							</ul>
+						</li>
+					</ul>
+				</div>
+				<!-- end #sidebar -->
+				<div style="clear: both;">&nbsp;</div>
+			</div>
+		</div>
+	</div>
+	<!-- end #page -->
+</div>
+<div id="footer">
+	<p>Copyright (c) 2010 USAR RHoK. All rights reserved. Design by <a href="http://www.freecsstemplates.org/"> CSS Templates</a>.</p>
+</div>
+<!-- end #footer -->
 </body>
 
 
