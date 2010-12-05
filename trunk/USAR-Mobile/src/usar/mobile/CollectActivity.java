@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
@@ -15,19 +13,15 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageView.ScaleType;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Gallery;
 import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class CollectActivity extends Activity {
 	private CameraView preview;
@@ -37,13 +31,17 @@ public class CollectActivity extends Activity {
 	private LinearLayout approvePanel;
 	private byte[] lastData;
 	private ArrayList<byte[]> images;
-	
+	private ContentStorageHelper mDbHelper;
     private LocationHelper lh;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		mDbHelper = new ContentStorageHelper(this);
+        mDbHelper.open();
+		
 		images = new ArrayList<byte[]>();
 		loadPictureTaker();
 	}
@@ -137,6 +135,11 @@ public class CollectActivity extends Activity {
 	
 	private void save(byte[] data, Location location, String dangerLevel) {
 	    DataTransferUtil.uploadData(location);
+	    
+	    String latitude = Double.toString(location.getLatitude());
+		String longitude = Double.toString(location.getLongitude());
+		
+		mDbHelper.createRescueImageEntry(data, latitude, longitude, dangerLevel);
 	}
 	
 	public void loadViewPlace(final Location location) {
