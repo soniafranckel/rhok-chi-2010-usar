@@ -121,8 +121,13 @@ class UpdateLocation (webapp.RequestHandler):
             location.num_people = int(self.request.get('num_people'))
         if self.request.get('condition'):
             location.condition = self.request.get('condition')
-        if self.request.get('date_found'):
-            location.date_found = self.request.get('date_found')
+
+        # note that order matters here: datetime.datetime() takes: year, month, day, hour, minute.
+        # In the template, catering for the moment to American we order it month, day, year, hour, minute
+        datetimeraw = [self.request.get(key) for key in ['date_found_year', 'date_found_month', 'date_found_day', 'date_found_hour', 'date_found_minute']]
+        if all(datetimeraw):
+            datetimedata = [int(key) for key in datetimeraw]
+            location.date_found = datetime(*datetimedata)
         if self.request.get('agency'):
             location.agency = self.request.get('agency')
 

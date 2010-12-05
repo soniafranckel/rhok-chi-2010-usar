@@ -47,9 +47,18 @@
         <div>
             <b>Date Found:</b>
             {% if location.date_found %}
-                <input name="date_found" type="text" value="{{ location.date_found}}"/>
+                Month: <input name="date_found_month" type="text" value="{{ location.date_found.month}}"  size="4"/>
+                Day: <input name="date_found_day" type="text" value="{{ location.date_found.day}}" size="4"/>
+                Year: <input name="date_found_year" type="text" value="{{ location.date_found.year}}" size="4"/>
+                Hour: <input name="date_found_hour" type="text" value="{{ location.date_found.hour}}" size="4"/>
+                Minute: <input name="date_found_minute" type="text" value="{{ location.date_found.minute}}" size="4"/>
             {% else %}
-                <input name="date_found" type="text"/>Info still missing
+                Month: <input name="date_found_month" type="text" size="4"/>
+                Day: <input name="date_found_day" type="text" size="4"/>
+                Year: <input name="date_found_year" type="text" size="4"/>
+                Hour: <input name="date_found_hour" type="text" value="0" size="4"/>
+                Minute: <input name="date_found_minute" type="text" value="0" size="4"/>
+                Info still missing
             {% endif %}
         </div>
 
