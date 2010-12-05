@@ -16,7 +16,6 @@ def require_login(handler):
     if not user:
         handler.redirect(users.create_login_url(handler.request.uri))
        
-   
 
 class House(db.Model):
     date_created = db.DateTimeProperty(auto_now_add=True) # the date the house was entered into the database
@@ -30,32 +29,36 @@ class House(db.Model):
     condition = db.StringProperty(multiline=False) # default Null
     date_found = db.DateTimeProperty() # default Null
     agency = db.StringProperty(multiline=False) # default Null
-    
 
 
 # in case we need multiple images per house, and each has some sort of metadata
 class HouseImage(db.Model):
     house = db.ReferenceProperty(House, collection_name='images', required=False) # should be required eventually
     image = db.BlobProperty()
+    def url(self):
+        return 'img?img_id=%s' % self.key()
 
 
-
-class UploadForm(webapp.RequestHandler):
+# Just for testing purposes
+class UploadHouseImageForm(webapp.RequestHandler):
     def get(self):
         self.response.out.write("""<html><body>
                   <form action="/upload" enctype="multipart/form-data" method="post">
+                    <div>House ID:<input type="text" name="house_id"/></div>
                     <div><input type="file" name="img"/></div>
                     <div><input type="submit" value="Send Pic"></div>
                   </form>
                 </body>
               </html>""") 
 
-class Upload(webapp.RequestHandler):
+
+class UploadHouseImage(webapp.RequestHandler):
     def post(self):
         require_login(self)
 
         houseimage = HouseImage()
         image = self.request.get("img")
+        houseimage.house = db.get(self.request.get("house_id"))
         houseimage.image = db.Blob(image)
         houseimage.put()
         self.redirect('/uploadform')
@@ -63,8 +66,10 @@ class Upload(webapp.RequestHandler):
 
 class MainPage(webapp.RequestHandler):
     def get(self):
-        self.redirect("/houseinfo")
+        self.redirect('/houseinfo')
+        return
 
+# Just for testing purposes
 class NewHouse (webapp.RequestHandler):
     form = """%i houses <html><body>
                   <form action="/newhouse" enctype="multipart/form-data" method="post">
@@ -87,7 +92,7 @@ class UpdateHouse (webapp.RequestHandler):
 
         house = db.get(self.request.get('house_id'))
 
-        house.updated_by = user
+        house.updated_by = users.get_current_user()
         house.date_updated = datetime.now()
 
         if self.request.get('num_people'):
@@ -101,7 +106,7 @@ class UpdateHouse (webapp.RequestHandler):
 
         house.put()
 
-        self.redirect('/houseinfo/?house_id' % house.key)
+        self.redirect('/houseinfo?house_id=%s' % house.key())
 
 class HouseInfo (webapp.RequestHandler):
     def get(self):
@@ -134,8 +139,8 @@ class ImageServe (webapp.RequestHandler):
 
 application = webapp.WSGIApplication(
                                      [('/', MainPage),
-                                      ('/uploadform', UploadForm),
-                                      ('/upload', Upload),
+                                      ('/uploadform', UploadHouseImageForm),
+                                      ('/upload', UploadHouseImage),
                                       ('/img', ImageServe),
                                       ('/newhouse', NewHouse),
                                       ('/houseinfo', HouseInfo),
