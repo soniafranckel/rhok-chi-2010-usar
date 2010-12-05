@@ -1,6 +1,8 @@
 package usar.mobile;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -106,12 +109,12 @@ public class CollectActivity extends Activity {
 		accept.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				save(lastData);
+				loadViewPlace();
 			}
 		});
 		release = (Button) findViewById(R.id.releasePhotoButton);
 		release.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				lastData = null;
 				switchToTakePhoto();
 			}
 		});
@@ -124,6 +127,21 @@ public class CollectActivity extends Activity {
 		if (location !=null) {
 		  displayLocation(location);
 		}
+	}
+	
+	public void loadViewPlace() {
+		setContentView(R.layout.viewplace);
+		
+		LinearLayout imgPanel = (LinearLayout) findViewById(R.id.imgPanel);
+		//ImageView picview = (ImageView) findViewById(R.id.picview);
+		// Add click handler
+		//TODO: Iterate through all images and add them
+		ImageView img = new ImageView(this);
+		Bitmap bmp=BitmapFactory.decodeByteArray(lastData, 0, lastData.length);
+		img.setImageBitmap(Bitmap.createScaledBitmap(bmp, 100, 100, false));		
+		imgPanel.addView(img);
+		TextView gps = (TextView) findViewById(R.id.gps);
+		//TODO(alissaf)
 	}
 	
 	private void displayLocation(Location location) {

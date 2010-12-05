@@ -91,4 +91,11 @@ class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 		camera.setParameters(parameters);
 		camera.startPreview();
 	}
+	
+	/**
+	 * Load view to see all pictures associated with a place.
+	 */
+	public void loadPlaceView() {
+		
+	}
 }
