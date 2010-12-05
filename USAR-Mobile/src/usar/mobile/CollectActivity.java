@@ -120,6 +120,7 @@ public class CollectActivity extends Activity {
 	}
 	
 	private void save(byte[] data, Location location) {
+	    DataTransferUtil.uploadData(location);
 	}
 	
 	public void loadViewPlace(Location location) {
