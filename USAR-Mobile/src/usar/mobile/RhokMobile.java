@@ -31,8 +31,8 @@ public class RhokMobile extends TabActivity {
         spec = tabHost.newTabSpec("locations").setIndicator("Locations").setContent(intent);
         tabHost.addTab(spec);
 
-        intent = new Intent().setClass(this, SettingsActivity.class);
-        spec = tabHost.newTabSpec("settings").setIndicator("Settings").setContent(intent);
+        intent = new Intent().setClass(this, MapsActivity.class);
+        spec = tabHost.newTabSpec("maps").setIndicator("Maps").setContent(intent);
         tabHost.addTab(spec);
 
         tabHost.setCurrentTab(0);
