@@ -9,7 +9,6 @@
 <value>/home/alissaf/google_appengine</value>
 </pydev_variables_property>
 <pydev_pathproperty name="org.python.pydev.PROJECT_SOURCE_PATH">
-<path>/USAR-WebApp/src</path>
 <path>/USAR-WebApp/urbansearchrescue</path>
 </pydev_pathproperty>
 <pydev_pathproperty name="org.python.pydev.PROJECT_EXTERNAL_SOURCE_PATH">
