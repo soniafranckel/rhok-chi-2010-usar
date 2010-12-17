@@ -90,8 +90,6 @@ class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 		List<Size> sizes = parameters.getSupportedPreviewSizes();
 		Size optimalSize = getOptimalPreviewSize(sizes, w, h);
 		parameters.setPreviewSize(optimalSize.width, optimalSize.height);
-		//parameters.set("rotation", 90);
-		//parameters.setPreviewSize(20, 20);
 		parameters.setRotation(0);
 		parameters.set("orientation", "portrait");
 		camera.setParameters(parameters);
