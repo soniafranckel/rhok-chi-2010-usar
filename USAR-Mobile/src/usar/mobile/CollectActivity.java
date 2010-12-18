@@ -137,9 +137,14 @@ public class CollectActivity extends Activity {
 	
 	private void save(byte[] data, Location location, String dangerLevel) {
 	    DataTransferUtil.uploadData(location);
-	    
-	    String latitude = Double.toString(location.getLatitude());
-		String longitude = Double.toString(location.getLongitude());
+	    String latitude, longitude;
+	    if (location != null) {
+	    	latitude = Double.toString(location.getLatitude());
+	    	longitude = Double.toString(location.getLongitude());
+	    } else {
+	    	latitude = "0";
+	    	longitude = "0";
+	    }
 		
 		mDbHelper.createRescueImageEntry(data, latitude, longitude, dangerLevel);
 	}
@@ -208,7 +213,6 @@ public class CollectActivity extends Activity {
 					}
 		        }).setNegativeButton("No", null)
 		        .show();
-
 			}
 		});
 		
